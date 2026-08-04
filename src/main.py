@@ -1,20 +1,33 @@
 from azure_sdk.auth import get_credential
-from config import SUBSCRIPTION_ID
-from azure_sdk.resource_management import get_resource_client
+from azure_sdk.resource_management import (
+    create_resource_management_client,
+    get_resource_group_names
+)
+from settings import AZURE_SUBSCRIPTION_ID
 
 
 def main():
 
     credential = get_credential()
 
-    resource_client = get_resource_client(
+    resource_client = create_resource_management_client(
         credential,
-        SUBSCRIPTION_ID
+        AZURE_SUBSCRIPTION_ID
     )
 
-    print("Azure Resource Inventory Tool")
+    resource_group_names = get_resource_group_names(resource_client)
 
-    print(f"Client : {type(resource_client).__name__}")
+    print("=" * 50)
+    print("Azure Resource Inventory Tool")
+    print("=" * 50)
+
+    print(f"Subscription ID : {AZURE_SUBSCRIPTION_ID}\n")
+
+    print("Resource Groups")
+    print("-" * 50)
+
+    for resource_group_name in resource_group_names:
+        print(resource_group_name)
 
 
 if __name__ == "__main__":
