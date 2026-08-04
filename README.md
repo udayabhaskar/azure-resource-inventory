@@ -6,8 +6,9 @@ Enterprise Azure Resource Inventory Tool built with Python and Azure SDK.
 
 This project automates the discovery of Azure resources and exports inventory reports.
 
-The initial version focuses on Azure Storage Accounts. Future versions will support additional Azure resources such as:
+The current implementation inventories Azure Resource Groups. Future versions will support additional Azure resources such as:
 
+- Storage Accounts
 - Virtual Machines
 - SQL Databases
 - App Services
@@ -17,11 +18,9 @@ The initial version focuses on Azure Storage Accounts. Future versions will supp
 
 ## Features
 
-- Authenticate to Azure
-- Discover Azure resources
-- Export inventory reports
-- Support multiple Azure resource types
-- Generate CSV reports
+- Authenticate to Azure using Azure CLI
+- Discover Azure Resource Groups
+- Modular Azure SDK wrapper architecture
 - Enterprise-ready project structure
 
 ## Technology Stack
@@ -35,18 +34,23 @@ The initial version focuses on Azure Storage Accounts. Future versions will supp
 
 ## Current Features
 
-- Project structure
-- Git integration
-- Configuration module
+- Enterprise project structure
+- Git and GitHub integration
+- Azure CLI authentication
+- Azure SDK wrapper layer
+- Azure Resource Group inventory
 
 ## Planned Features
 
-- Azure authentication
-- Azure resource discovery
 - CSV export
 - Logging
 - Error handling
-- Support for multiple Azure resource types
+- Storage Account inventory
+- Virtual Machine inventory
+- SQL Database inventory
+- App Service inventory
+- Virtual Network inventory
+- Key Vault inventory
 
 ## Project Structure
 
@@ -54,7 +58,15 @@ The initial version focuses on Azure Storage Accounts. Future versions will supp
 azure-resource-inventory
 │
 ├── src/
+│   ├── azure_sdk/
+│   ├── main.py
+│   └── settings.py
+│
 ├── config/
+├── docs/
+├── logs/
+├── output/
+├── tests/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
@@ -66,12 +78,12 @@ azure-resource-inventory
 - [x] Git Repository
 - [x] GitHub Repository
 - [x] Python Project Structure
-- [ ] Azure Authentication
-- [ ] Resource Inventory
+- [x] Azure Authentication
+- [x] Resource Group Inventory
 - [ ] CSV Export
 - [ ] Logging
 - [ ] Error Handling
-- [ ] Documentation Improvements
+- [ ] Storage Account Inventory
 
 ## Author
 
