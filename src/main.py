@@ -1,6 +1,6 @@
-from core.auth import get_credential
+from azure_sdk.auth import get_credential
 from config import SUBSCRIPTION_ID
-from core.resource_management import get_resource_client
+from azure_sdk.resource_management import get_resource_client
 
 
 def main():
