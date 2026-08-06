@@ -39,13 +39,13 @@ The current implementation inventories Azure Resource Groups. Future versions wi
 - Azure CLI authentication
 - Azure SDK wrapper layer
 - Azure Resource Group inventory
+- Storage Account inventory
 
 ## Planned Features
 
 - CSV export
 - Logging
 - Error handling
-- Storage Account inventory
 - Virtual Machine inventory
 - SQL Database inventory
 - App Service inventory
@@ -80,10 +80,11 @@ azure-resource-inventory
 - [x] Python Project Structure
 - [x] Azure Authentication
 - [x] Resource Group Inventory
+- [x] Storage Account Inventory
 - [ ] CSV Export
 - [ ] Logging
 - [ ] Error Handling
-- [ ] Storage Account Inventory
+
 
 ## Author
 
