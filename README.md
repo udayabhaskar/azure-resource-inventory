@@ -40,10 +40,10 @@ The current implementation inventories Azure Resource Groups. Future versions wi
 - Azure SDK wrapper layer
 - Azure Resource Group inventory
 - Storage Account inventory
+- CSV export
 
 ## Planned Features
 
-- CSV export
 - Logging
 - Error handling
 - Virtual Machine inventory
@@ -81,7 +81,7 @@ azure-resource-inventory
 - [x] Azure Authentication
 - [x] Resource Group Inventory
 - [x] Storage Account Inventory
-- [ ] CSV Export
+- [x] CSV Export
 - [ ] Logging
 - [ ] Error Handling
 

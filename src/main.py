@@ -8,6 +8,7 @@ from azure_sdk.resource_management import (
     get_resource_group_details
 )
 from settings import AZURE_SUBSCRIPTION_ID
+from exporter.csv_export import write_csv_report
 
 
 def main():
@@ -49,7 +50,17 @@ def main():
         print(f"Resource Group : {storage_account['resource_group']}")
         print(f"Location       : {storage_account['location']}")
         print("-" * 50)
+    print()
 
+    storage_report_created = write_csv_report(
+    storage_account_details,
+    "output/storage_accounts.csv"
+)
+
+    if storage_report_created:
+        print("Storage Account CSV report generated successfully.")
+    else:
+        print("No Storage Accounts found. CSV report was not generated.")
 
 if __name__ == "__main__":
     main()
