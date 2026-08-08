@@ -41,10 +41,10 @@ The current implementation inventories Azure Resource Groups. Future versions wi
 - Azure Resource Group inventory
 - Storage Account inventory
 - CSV export
+- Logging   
 
 ## Planned Features
 
-- Logging
 - Error handling
 - Virtual Machine inventory
 - SQL Database inventory
@@ -82,7 +82,7 @@ azure-resource-inventory
 - [x] Resource Group Inventory
 - [x] Storage Account Inventory
 - [x] CSV Export
-- [ ] Logging
+- [x] Logging
 - [ ] Error Handling
 
 

@@ -1,3 +1,5 @@
+from asyncio.log import logger
+import logging
 from azure_sdk.auth import get_credential
 from azure_sdk.storage_management import (
     create_storage_management_client,
@@ -9,10 +11,15 @@ from azure_sdk.resource_management import (
 )
 from settings import AZURE_SUBSCRIPTION_ID
 from exporter.csv_export import write_csv_report
+from logging_config import configure_logging
 
 
 def main():
 
+    logger = configure_logging()
+
+    logger.info("Azure Resource Inventory started.")
+    
     credential = get_credential()
 
     resource_client = create_resource_management_client(
@@ -25,7 +32,13 @@ def main():
     )
 
     resource_group_details = get_resource_group_details(resource_client)
+    logger.info(
+    f"Retrieved {len(resource_group_details)} Resource Groups."
+    )
     storage_account_details = get_storage_account_details(storage_client)
+    logger.info(
+    f"Retrieved {len(storage_account_details)} Storage Accounts."
+    )
 
     print("=" * 50)
     print("Azure Resource Inventory Tool")
@@ -58,9 +71,11 @@ def main():
 )
 
     if storage_report_created:
+        logger.info("Storage Account CSV report generated successfully.")
         print("Storage Account CSV report generated successfully.")
     else:
         print("No Storage Accounts found. CSV report was not generated.")
 
+    logger.info("Azure Resource Inventory completed successfully.")
 if __name__ == "__main__":
     main()
