@@ -12,6 +12,10 @@ from azure_sdk.vm_management import (
     create_compute_management_client,
     get_virtual_machine_details
 )
+from azure_sdk.sql_management import (
+    create_sql_management_client,
+    get_sql_database_details
+)
 from settings import AZURE_SUBSCRIPTION_ID
 from exporter.csv_export import write_csv_report
 from logging_config import configure_logging
@@ -39,6 +43,10 @@ def main():
         credential,
         AZURE_SUBSCRIPTION_ID
         )
+        sql_client = create_sql_management_client(
+        credential,
+        AZURE_SUBSCRIPTION_ID
+        )
 
         resource_group_details = get_resource_group_details(resource_client)
         logger.info(
@@ -51,6 +59,10 @@ def main():
         virtual_machine_details = get_virtual_machine_details(compute_client)
         logger.info(
         f"Retrieved {len(virtual_machine_details)} Virtual Machines."
+        )
+        sql_database_details = get_sql_database_details(sql_client)
+        logger.info(
+        f"Retrieved {len(sql_database_details)} SQL Databases."
         )
 
         print("=" * 50)
@@ -101,6 +113,23 @@ def main():
         virtual_machine_details,
         "output/virtual_machines.csv"
         )
+        print()
+        print("SQL Databases")
+        print("-" * 50)
+        for sql_database in sql_database_details:
+            print(f"Name           : {sql_database['name']}")
+            print(f"Server Name    : {sql_database['server_name']}")
+            print(f"Resource Group : {sql_database['resource_group']}")
+            print(f"Location       : {sql_database['location']}")
+            print(f"Status         : {sql_database['status']}")
+            print(f"Max Size (Bytes): {sql_database['max_size_bytes']}")
+            print(f"Pricing Tier   : {sql_database['pricing_tier']}")
+            print("-" * 50)
+        print()
+        sql_database_report_created = write_csv_report(
+            sql_database_details,
+            "output/sql_databases.csv"
+        )
 
         if storage_report_created:
              logger.info("Storage Account CSV report generated successfully.")
@@ -113,6 +142,11 @@ def main():
              print("Virtual Machine CSV report generated successfully.")
         else:
              print("No Virtual Machines found. CSV report was not generated.")
+        if sql_database_report_created:
+             logger.info("SQL Database CSV report generated successfully.")
+             print("SQL Database CSV report generated successfully.")
+        else:
+             print("No SQL Databases found. CSV report was not generated.")
 
         logger.info("Azure Resource Inventory completed successfully.")
     
