@@ -1,4 +1,3 @@
-from asyncio.log import logger
 import logging
 from azure_sdk.auth import get_credential
 from azure_sdk.storage_management import (
@@ -20,62 +19,72 @@ def main():
 
     logger.info("Azure Resource Inventory started.")
     
-    credential = get_credential()
+    try:
+        
+        credential = get_credential()
 
-    resource_client = create_resource_management_client(
+        resource_client = create_resource_management_client(
         credential,
         AZURE_SUBSCRIPTION_ID
-    )
-    storage_client = create_storage_management_client(
+        )
+        storage_client = create_storage_management_client(
         credential,
         AZURE_SUBSCRIPTION_ID
-    )
+        )
 
-    resource_group_details = get_resource_group_details(resource_client)
-    logger.info(
-    f"Retrieved {len(resource_group_details)} Resource Groups."
-    )
-    storage_account_details = get_storage_account_details(storage_client)
-    logger.info(
-    f"Retrieved {len(storage_account_details)} Storage Accounts."
-    )
+        resource_group_details = get_resource_group_details(resource_client)
+        logger.info(
+        f"Retrieved {len(resource_group_details)} Resource Groups."
+        )
+        storage_account_details = get_storage_account_details(storage_client)
+        logger.info(
+        f"Retrieved {len(storage_account_details)} Storage Accounts."
+        )
 
-    print("=" * 50)
-    print("Azure Resource Inventory Tool")
-    print("=" * 50)
+        print("=" * 50)
+        print("Azure Resource Inventory Tool")
+        print("=" * 50)
 
-    print(f"Subscription ID : {AZURE_SUBSCRIPTION_ID}\n")
+        print(f"Subscription ID : {AZURE_SUBSCRIPTION_ID}\n")
 
-    print("Resource Groups")
-    print("-" * 50)
-
-    for resource_group in resource_group_details:
-        print(resource_group["name"])
-    
-    print()
-
-    print("Storage Accounts")
-    print("-" * 50)
-
-    for storage_account in storage_account_details:
-
-        print(f"Name           : {storage_account['name']}")
-        print(f"Resource Group : {storage_account['resource_group']}")
-        print(f"Location       : {storage_account['location']}")
+        print("Resource Groups")
         print("-" * 50)
-    print()
 
-    storage_report_created = write_csv_report(
-    storage_account_details,
-    "output/storage_accounts.csv"
-)
+        for resource_group in resource_group_details:
+            print(resource_group["name"])
+    
+        print()
 
-    if storage_report_created:
-        logger.info("Storage Account CSV report generated successfully.")
-        print("Storage Account CSV report generated successfully.")
-    else:
-        print("No Storage Accounts found. CSV report was not generated.")
+        print("Storage Accounts")
+        print("-" * 50)
 
-    logger.info("Azure Resource Inventory completed successfully.")
+        for storage_account in storage_account_details:
+
+            print(f"Name           : {storage_account['name']}")
+            print(f"Resource Group : {storage_account['resource_group']}")
+            print(f"Location       : {storage_account['location']}")
+            print("-" * 50)
+        print()
+
+        storage_report_created = write_csv_report(
+        storage_account_details,
+        "output/storage_accounts.csv"
+    )
+
+        if storage_report_created:
+            logger.info("Storage Account CSV report generated successfully.")
+            print("Storage Account CSV report generated successfully.")
+        else:
+            print("No Storage Accounts found. CSV report was not generated.")
+
+        logger.info("Azure Resource Inventory completed successfully.")
+    
+    except Exception as ex:
+
+        logger.exception("Failed to generate Azure Resource Inventory.")
+
+        print("\nERROR: Failed to generate Azure Resource Inventory.")
+
+        print(f"Reason: {ex}")
 if __name__ == "__main__":
     main()
