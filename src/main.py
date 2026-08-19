@@ -16,6 +16,10 @@ from azure_sdk.sql_management import (
     create_sql_management_client,
     get_sql_database_details
 )
+from azure_sdk.app_service_management import (
+    create_web_management_client,
+    get_app_service_details
+)
 from settings import AZURE_SUBSCRIPTION_ID
 from exporter.csv_export import write_csv_report
 from logging_config import configure_logging
@@ -47,6 +51,10 @@ def main():
         credential,
         AZURE_SUBSCRIPTION_ID
         )
+        app_service_client = create_web_management_client(
+        credential,
+        AZURE_SUBSCRIPTION_ID
+        )
 
         resource_group_details = get_resource_group_details(resource_client)
         logger.info(
@@ -63,6 +71,10 @@ def main():
         sql_database_details = get_sql_database_details(sql_client)
         logger.info(
         f"Retrieved {len(sql_database_details)} SQL Databases."
+        )
+        app_service_details = get_app_service_details(app_service_client)
+        logger.info(
+        f"Retrieved {len(app_service_details)} App Services."
         )
 
         print("=" * 50)
@@ -130,6 +142,27 @@ def main():
             sql_database_details,
             "output/sql_databases.csv"
         )
+        print()
+        print("App Services")
+        print("-" * 50)
+        for app_service in app_service_details:
+            print(f"Name           : {app_service['name']}")
+            print(f"Resource Group : {app_service['resource_group']}")
+            print(f"Location       : {app_service['location']}")
+            print(f"State          : {app_service['state']}")
+            print(f"Default Host Name: {app_service['default_host_name']}")
+            print(f"App Service Plan: {app_service['app_service_plan_name']}")
+            print(f"OS Type        : {app_service['os_type']}")
+            print(f"Pricing Tier   : {app_service['pricing_tier']}")
+            print(f"App Service URL: {app_service['app_service_url']}")
+            print(f"Deployment Slots: {', '.join(app_service['deployment_slots']) if app_service['deployment_slots'] else 'N/A'}")
+            print(f"Custom Domains : {', '.join(app_service['custom_domains']) if app_service['custom_domains'] else 'N/A'}")
+            print("-" * 50)
+        print()
+        app_service_report_created = write_csv_report(
+            app_service_details,
+            "output/app_services.csv"
+        )   
 
         if storage_report_created:
              logger.info("Storage Account CSV report generated successfully.")
@@ -147,7 +180,12 @@ def main():
              print("SQL Database CSV report generated successfully.")
         else:
              print("No SQL Databases found. CSV report was not generated.")
-
+        if app_service_report_created:
+             logger.info("App Service CSV report generated successfully.")
+             print("App Service CSV report generated successfully.")
+        else:
+             print("No App Services found. CSV report was not generated.")
+        
         logger.info("Azure Resource Inventory completed successfully.")
     
     except Exception as ex:
