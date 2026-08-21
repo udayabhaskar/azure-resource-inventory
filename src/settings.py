@@ -1,5 +1,7 @@
 # Azure Settings
-AZURE_SUBSCRIPTION_ID = "xxxxxxxxxxxxxxxx"
+from utils.azure_helpers import get_subscription_id
+
+AZURE_SUBSCRIPTION_ID = get_subscription_id()
 AZURE_LOCATION = "South India"
 
 # Report Settings
