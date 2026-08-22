@@ -20,6 +20,10 @@ from azure_sdk.app_service_management import (
     create_web_management_client,
     get_app_service_details
 )
+from azure_sdk.key_vaults import (
+    create_key_vault_management_client,
+    get_key_vault_details
+)
 from settings import AZURE_SUBSCRIPTION_ID
 from exporter.csv_export import write_csv_report
 from logging_config import configure_logging
@@ -55,6 +59,10 @@ def main():
         credential,
         AZURE_SUBSCRIPTION_ID
         )
+        key_vault_client = create_key_vault_management_client(
+        credential,
+        AZURE_SUBSCRIPTION_ID
+        )
 
         resource_group_details = get_resource_group_details(resource_client)
         logger.info(
@@ -75,6 +83,10 @@ def main():
         app_service_details = get_app_service_details(app_service_client)
         logger.info(
         f"Retrieved {len(app_service_details)} App Services."
+        )
+        key_vault_details = get_key_vault_details(key_vault_client)
+        logger.info(
+        f"Retrieved {len(key_vault_details)} Key Vaults."
         )
 
         print("=" * 50)
@@ -163,6 +175,24 @@ def main():
             app_service_details,
             "output/app_services.csv"
         )   
+        print()
+        print("Key Vaults")
+        print("-" * 50)
+        for key_vault in key_vault_details:
+            print(f"Name           : {key_vault['name']}")
+            print(f"Resource Group : {key_vault['resource_group']}")
+            print(f"Location       : {key_vault['location']}")
+            print(f"Tenant ID      : {key_vault['tenant_id']}")
+            print(f"Soft Delete Enabled: {key_vault['soft_delete_enabled']}")
+            print(f"Purge Protection Enabled: {key_vault['purge_protection_enabled']}")
+            print(f"Public Network Access: {key_vault['public_network_access']}")
+            print(f"Provisioning State: {key_vault['provisioning_state']}")
+            print("-" * 50)
+        print()
+        key_vault_report_created = write_csv_report(
+            key_vault_details,
+            "output/key_vaults.csv"
+        )
 
         if storage_report_created:
              logger.info("Storage Account CSV report generated successfully.")
@@ -187,6 +217,11 @@ def main():
              print("No App Services found. CSV report was not generated.")
         
         logger.info("Azure Resource Inventory completed successfully.")
+        if key_vault_report_created:
+             logger.info("Key Vault CSV report generated successfully.")
+             print("Key Vault CSV report generated successfully.")
+        else:
+             print("No Key Vaults found. CSV report was not generated.")
     
     except Exception as ex:
 
